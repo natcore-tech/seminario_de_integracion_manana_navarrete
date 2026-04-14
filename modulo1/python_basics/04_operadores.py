@@ -33,3 +33,6 @@ print("n%3", n)
 
 n**=3
 print("n**3", n)
+
+#Operadores Logicos
+#Operadores Comparacion
