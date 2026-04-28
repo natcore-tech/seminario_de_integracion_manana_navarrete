@@ -30,7 +30,3 @@ while (contador<=5):
     contador+=1
 else:
     print("Fin del ciclo")
-
-contador=1
-:
-print
