@@ -1,23 +1,22 @@
-# store/serializers/category.py
+# store/serializers/category.py — reemplazar CategorySerializer
 from rest_framework import serializers
 from django.utils.text import slugify
 from store.models import Category
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    """
-    El campo total_products se agrega en la Etapa 4
-    cuando el modelo Product ya existe.
-    Incluirlo antes provoca AttributeError: 'Category' has no attribute 'products'.
-    """
+    total_products = serializers.SerializerMethodField()
 
     class Meta:
         model  = Category
         fields = [
             'id', 'name', 'slug', 'description',
-            'is_active', 'created_at',
+            'is_active', 'total_products', 'created_at',
         ]
         read_only_fields = ['id', 'created_at']
+
+    def get_total_products(self, obj):
+        return obj.products.filter(is_active=True).count()
 
     def validate_slug(self, value):
         return slugify(value)
