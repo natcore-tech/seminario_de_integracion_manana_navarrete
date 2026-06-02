@@ -1,41 +1,41 @@
-print("Ciclo for")
-frutas=["manzana","banana","pera","sandia",]
-for fruta in frutas:
-    print(fruta)
-print("Recorrer palabras")
-for letra in "frutas":
+print("Registro de Notas - Sistema de Estudiantes")
+asignaturas=["Matematica","Programacion","Fisica","Historia",]
+for asignatura in asignaturas:
+    print(asignatura)
+print("Calificaciones por letra")
+for letra in "ABCDEF":
     print(letra)
 
-print("Recorrer rango")
+print("Generador de IDs de estudiantes")
 for i in range(1,10,2):
+    print(f"ID Estudiante: {i}")
+
+print("Enumeracion de asignaturas")
+for i in enumerate(asignaturas):
     print(i)
 
-print("Enumerar lista")
-for i in enumerate(frutas):
-    print(i)
+print("Registro de estudiantes y notas")
+estudiantes=["Maria","Jose","Luis",]
+notas=[18,24]
+for estudiante,nota in zip(estudiantes,notas):
+    print(f"{estudiante}: {nota} puntos")
 
-print("Dos listas a la vez")
-nombres=["Maria","Jose","Luis",]
-edades=[18,24]
-for nombre,edad in zip(nombres,edades):
-    print(nombre,edad)
-
-print("Control del Ciclo")
-print("Break")
+print("Validacion de notas aprobadas")
+print("Filtrar notas menores a 10")
 for i in range(5):
     if i==6:
         break
-    print(i)
-print("Continue")
+    print(f"Nota minima requerida: {i}")
+print("Saltar estudiantes sin registro")
 for i in range(5):
     if i==2:
         continue
-    print(i)
+    print(f"Procesando estudiante {i}")
 
-print("For anidado")
+print("Calculo de promedios multiples")
 for i in range(3):
     for j in range(2):
-        print(i,j)
-print("Lista comprehension forma corta")
-cuadrados=[x**2 for x in range(5)]
-print(cuadrados)
+        print(f"Promedio cuatrimestre {i} materia {j}")
+print("Generador de rangos de calificacion")
+rangos=[x*10 for x in range(5)]
+print(rangos)

@@ -1,23 +1,25 @@
-print("Match case")
-comando=input("Comando proceso iniciar/parar/reiniciar: ")
-match comando:
-    case "inciar":
-        print("Sistema iniciando")
-    case "parar":
-        print("Sistema detenido")
-    case "reiniciar":
-        print("Sistema reiniciando")
+print("Registro de notas")
+accion=input("Accion registro registrar/consultar/eliminar: ")
+match accion:
+    case "registrar":
+        print("Iniciando registro de nota")
+    case "consultar":
+        print("Consultando notas del estudiante")
+    case "eliminar":
+        print("Eliminando registro de nota")
     case _:
-        print(f"Comando '{comando}' no encontrado")
+        print(f"Accion '{accion}' no reconocida")
 
-print("Match condiciones")
-numero=7
-match numero:
+print("Evaluacion de nota")
+nota=7
+match nota:
     case n if n<0:
-        print(f"{n} es negativo")
+        print(f"Nota {n} invalida")
     case 0:
-        print("Es cero")
-    case n if n % 2 == 0:
-        print(f"{n} es par")
+        print("Nota 0: sin entrega")
+    case n if n < 5:
+        print(f"Nota {n}: Suspenso")
+    case n if n < 7:
+        print(f"Nota {n}: Aprobado")
     case n:
-        print(f"{n} es positivo e impar")
+        print(f"Nota {n}: Sobresaliente")

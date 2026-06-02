@@ -1,58 +1,53 @@
-# polimorfismo.py
+class Nota:
+    def __init__(self, estudiante, contenido):
+        self.estudiante = estudiante
+        self.contenido  = contenido
 
-# POLIMORFISMO POR HERENCIA — override de métodos
-class Notificacion:
-    """Clase base abstracta."""
-    def __init__(self, destinatario, mensaje):
-        self.destinatario = destinatario
-        self.mensaje      = mensaje
-
-    def enviar(self):
-        raise NotImplementedError("Las subclases deben implementar enviar()")
+    def registrar(self):
+        raise NotImplementedError("Las subclases deben implementar registrar()")
 
     def __str__(self):
-        return f"{self.__class__.__name__} → {self.destinatario}"
+        return f"{self.__class__.__name__} → {self.estudiante}"
 
-class NotificacionEmail(Notificacion):
-    def __init__(self, destinatario, mensaje, asunto="Sin asunto"):
-        super().__init__(destinatario, mensaje)
-        self.asunto = asunto
+class NotaMatematicas(Nota):
+    def __init__(self, estudiante, contenido, calificacion=0.0):
+        super().__init__(estudiante, contenido)
+        self.calificacion = calificacion
 
-    def enviar(self):
-        return f"📧 Email a {self.destinatario}: [{self.asunto}] {self.mensaje}"
+    def registrar(self):
+        return f"📐 Matemáticas para {self.estudiante}: [{self.calificacion}] {self.contenido}"
 
-class NotificacionSMS(Notificacion):
-    MAX_CHARS = 160
+class NotaLenguaje(Nota):
+    MAX_CHARS = 200
 
-    def enviar(self):
-        msg = self.mensaje[:self.MAX_CHARS]
-        return f"📱 SMS a {self.destinatario}: {msg}"
+    def registrar(self):
+        msg = self.contenido[:self.MAX_CHARS]
+        return f"📖 Lenguaje para {self.estudiante}: {msg}"
 
-class NotificacionPush(Notificacion):
-    def enviar(self):
-        return f"🔔 Push a {self.destinatario}: {self.mensaje[:50]}..."
+class NotaCiencias(Nota):
+    def registrar(self):
+        return f"🔬 Ciencias para {self.estudiante}: {self.contenido[:50]}..."
 
-class NotificacionSlack(Notificacion):
-    def __init__(self, canal, mensaje):
-        super().__init__(canal, mensaje)
+class NotaHistoria(Nota):
+    def __init__(self, periodo, contenido):
+        super().__init__(periodo, contenido)
 
-    def enviar(self):
-        return f"💬 Slack #{self.destinatario}: {self.mensaje}"
+    def registrar(self):
+        return f"📜 Historia {self.estudiante}: {self.contenido}"
 
-# Polimorfismo en acción — misma función, distintos tipos
-def notificar_todos(notificaciones: list):
-    for notif in notificaciones:
-        print(f"  {notif.enviar()}")   # cada uno envía a su manera
+def notificar_todos(notas: list):
+    for nota in notas:
+        print(f"  {nota.registrar()}")
 
-alertas = [
-    NotificacionEmail("ana@email.com",  "Tu pedido fue enviado", "Pedido #1234"),
-    NotificacionSMS("600111222",        "Tu pedido está en camino"),
-    NotificacionPush("dispositivo-abc", "¡Nuevo mensaje recibido!"),
-    NotificacionSlack("alertas",        "Servidor caído — revisar urgente"),
+registros = [
+    NotaMatematicas("Juan García",  "Cálculo diferencial aprobado", 8.5),
+    NotaLenguaje("María López",     "Análisis de literatura contemporánea"),
+    NotaCiencias("Carlos Ruiz",     "Experimento de física completado exitosamente"),
+    NotaHistoria("Edad Media",      "Manuscrito sobre feudalismo revisado"),
 ]
 
-print("Enviando notificaciones:")
-notificar_todos(alertas)
+print("Registrando notas:")
+notificar_todos(registros)
 
 # POLIMORFISMO DUCK TYPING — sin herencia
 # "Si camina como un pato y grazna como un pato, es un pato"

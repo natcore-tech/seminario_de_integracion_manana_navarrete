@@ -1,53 +1,51 @@
-# tuplas.py
+vacia = ()
+unitaria = (10,)
+estudiante = ("Mario", "A001", 8.5)
+colegio = "IES Ejemplo"
 
-# Crear tuplas
-vacia      = ()
-unitaria   = (42,)          # ← la coma es obligatoria para una tupla de un elemento
-coordenada = (3, 4)
-rgb        = (255, 128, 0)
-persona    = ("Ana", 28, "Madrid")
+punto = 5, 7
+print(type(punto))
 
-# Tupla sin paréntesis — el empaquetado implícito
-punto  = 10, 20             # también es una tupla
-print(type(punto))          # <class 'tuple'>
+print(estudiante[0])
+print(estudiante[-1])
+print(estudiante[1:])
 
-# Acceso — igual que las listas
-print(persona[0])           # Ana
-print(persona[-1])          # Madrid
-print(persona[1:])          # (28, 'Madrid')
+nombre_alumno, codigo, nota = estudiante
+print(f"Alumno: {nombre_alumno} | Código: {codigo} | Nota: {nota}")
 
-# Las tuplas son INMUTABLES
-# persona[0] = "Luis"       # TypeError — no se puede modificar
+primero, *resto = (9.0, 7.5, 8.0, 6.0)
+print(f"Primera nota: {primero}")
+print(f"Resto de notas: {resto}")
 
-# Desempaquetado (unpacking)
-nombre, edad, ciudad = persona
-print(nombre, edad, ciudad)  # Ana 28 Madrid
+*inicio, ultimo = (9.0, 7.5, 8.0, 6.0)
+print(f"Inicio: {inicio}")
+print(f"Última nota: {ultimo}")
 
-# Desempaquetado con *
-primero, *resto = (1, 2, 3, 4, 5)
-print(primero)   # 1
-print(resto)     # [2, 3, 4, 5]
-
-*inicio, ultimo = (1, 2, 3, 4, 5)
-print(inicio)    # [1, 2, 3, 4]
-print(ultimo)    # 5
-
-# Tuplas de retorno de funciones
 def dividir(a, b):
     if b == 0:
         return None, "División por cero"
     return a / b, None
 
-resultado, error = dividir(10, 3)
+resultado, error = dividir(85, 10)
 if error:
     print(f"Error: {error}")
 else:
-    print(f"Resultado: {resultado:.4f}")
+    print(f"Media parcial: {resultado:.2f}")
 
-# Tuplas como claves de diccionario (las listas NO pueden ser claves)
-coordenadas = {(0, 0): "origen", (1, 0): "eje X", (0, 1): "eje Y"}
-print(coordenadas[(0, 0)])   # origen
+registro = {("A001", "Matemáticas"): 8.5, ("A002", "Lengua"): 7.0}
+print(registro[("A001", "Matemáticas")])
 
-# Cuándo usar tuple vs list
-# tuple → datos que no cambian: RGB, coordenadas, registros de BD
-# list  → datos que se modifican: colección de usuarios, carrito, etc.
+class RegistroNotas:
+    def __init__(self, nombre_colegio, datos=None):
+        self.colegio = nombre_colegio
+        self.datos = datos or {}
+
+    def agregar(self, codigo, asignatura, nota):
+        self.datos[(codigo, asignatura)] = nota
+
+    def obtener(self, codigo, asignatura):
+        return self.datos.get((codigo, asignatura))
+
+reg = RegistroNotas(colegio, registro)
+reg.agregar("A003", "Física", 9.0)
+print(reg.obtener("A003", "Física"))

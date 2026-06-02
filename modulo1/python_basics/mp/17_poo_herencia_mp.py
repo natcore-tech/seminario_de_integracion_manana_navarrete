@@ -1,73 +1,69 @@
-# herencia.py
+class Estudiante:
+    def __init__(self, nombre, apellido, matricula):
+        self.nombre = nombre
+        self.apellido = apellido
+        self.matricula = matricula
+        self._promedio = 0
 
-class Vehiculo:
-    def __init__(self, marca, modelo, año):
-        self.marca  = marca
-        self.modelo = modelo
-        self.año    = año
-        self._velocidad = 0    # _ → convención "protegido"
-
-    def acelerar(self, incremento):
-        self._velocidad += incremento
+    def agregar_nota(self, incremento):
+        self._promedio += incremento
         return self
 
-    def frenar(self, decremento):
-        self._velocidad = max(0, self._velocidad - decremento)
+    def restar_nota(self, decremento):
+        self._promedio = max(0, self._promedio - decremento)
         return self
 
     def __str__(self):
-        return f"{self.marca} {self.modelo} ({self.año}) — {self._velocidad} km/h"
+        return f"{self.nombre} {self.apellido} ({self.matricula}) — Promedio: {self._promedio}"
 
-class Coche(Vehiculo):
-    def __init__(self, marca, modelo, año, puertas=4):
-        super().__init__(marca, modelo, año)   # llama al constructor del padre
-        self.puertas = puertas
+class EstudiantePresencial(Estudiante):
+    def __init__(self, nombre, apellido, matricula, grupo=1):
+        super().__init__(nombre, apellido, matricula)
+        self.grupo = grupo
 
-    def bocinar(self):
-        return f"{self.marca} {self.modelo}: ¡Piiip!"
-
-    def __str__(self):
-        return f"{super().__str__()} ({self.puertas} puertas)"
-
-class Moto(Vehiculo):
-    def __init__(self, marca, modelo, año, cilindrada):
-        super().__init__(marca, modelo, año)
-        self.cilindrada = cilindrada
-
-    def hacer_wheelie(self):
-        return f"🏍 {self.marca} hace un wheelie!"
+    def asistir(self):
+        return f"{self.nombre} {self.apellido}: Presente"
 
     def __str__(self):
-        return f"{super().__str__()} ({self.cilindrada}cc)"
+        return f"{super().__str__()} (Grupo: {self.grupo})"
 
-class CocheElectrico(Coche):
-    def __init__(self, marca, modelo, año, autonomia):
-        super().__init__(marca, modelo, año)
-        self.__autonomia = autonomia
-        self.__bateria   = 100
+class EstudianteVirtual(Estudiante):
+    def __init__(self, nombre, apellido, matricula, plataforma):
+        super().__init__(nombre, apellido, matricula)
+        self.plataforma = plataforma
 
-    def cargar(self, porcentaje=100):
-        self.__bateria = min(100, self.__bateria + porcentaje)
+    def conectar(self):
+        return f"📱 {self.nombre} se conecta desde {self.plataforma}"
+
+    def __str__(self):
+        return f"{super().__str__()} ({self.plataforma})"
+
+class EstudianteHibridoAvanzado(EstudiantePresencial):
+    def __init__(self, nombre, apellido, matricula, calificacion_especial):
+        super().__init__(nombre, apellido, matricula)
+        self.__calificacion_especial = calificacion_especial
+        self.__creditos = 100
+
+    def acumular_creditos(self, porcentaje=100):
+        self.__creditos = min(100, self.__creditos + porcentaje)
         return self
 
     @property
-    def autonomia_restante(self):
-        return self.__autonomia * self.__bateria / 100
+    def puntos_disponibles(self):
+        return self.__calificacion_especial * self.__creditos / 100
 
     def __str__(self):
         return (f"{super().__str__()} | "
-                f"Batería: {self.__bateria}% | "
-                f"Autonomía: {self.autonomia_restante:.0f}km")
+                f"Créditos: {self.__creditos}% | "
+                f"Puntos: {self.puntos_disponibles:.0f}")
 
-# Herencia — cada objeto es también de todos sus tipos padre
-tesla = CocheElectrico("Tesla", "Model 3", 2024, 500)
-tesla.acelerar(100)
-print(tesla)
+estudiante = EstudianteHibridoAvanzado("Juan", "Pérez", 12345, 50)
+estudiante.agregar_nota(8)
+print(estudiante)
 
-print(isinstance(tesla, CocheElectrico))  # True
-print(isinstance(tesla, Coche))           # True — herencia
-print(isinstance(tesla, Vehiculo))        # True — herencia transitiva
-print(isinstance(tesla, Moto))            # False
+print(isinstance(estudiante, EstudianteHibridoAvanzado))
+print(isinstance(estudiante, EstudiantePresencial))
+print(isinstance(estudiante, Estudiante))
+print(isinstance(estudiante, EstudianteVirtual))
 
-# MRO — Method Resolution Order
-print(CocheElectrico.__mro__)
+print(EstudianteHibridoAvanzado.__mro__)

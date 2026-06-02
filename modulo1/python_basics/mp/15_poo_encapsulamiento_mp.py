@@ -1,14 +1,11 @@
-# encapsulamiento.py
-
-class CuentaBancaria:
+class RegistroNotas:
     def __init__(self, titular, saldo_inicial=0):
-        self.titular    = titular
-        self.__saldo    = saldo_inicial     # __ → privado (name mangling)
+        self.titular = titular
+        self.__saldo = saldo_inicial
         self.__historial = []
-        self.__activa   = True
-        self.__registrar(f"Cuenta creada con {saldo_inicial}€")
+        self.__activa = True
+        self.__registrar(f"Registro creado con nota inicial {saldo_inicial}")
 
-    # Property — getter (acceso como atributo, no como método)
     @property
     def saldo(self):
         return self.__saldo
@@ -19,53 +16,47 @@ class CuentaBancaria:
 
     @property
     def historial(self):
-        return list(self.__historial)   # devuelve copia, no referencia
+        return list(self.__historial)
 
-    # Método público — la "ventanilla"
     def depositar(self, cantidad):
         if cantidad <= 0:
-            raise ValueError("La cantidad debe ser positiva")
+            raise ValueError("La nota debe ser positiva")
         self.__saldo += cantidad
-        self.__registrar(f"Depósito: +{cantidad}€")
+        self.__registrar(f"Nota agregada: +{cantidad}")
         return self
 
     def retirar(self, cantidad):
         if cantidad <= 0:
-            raise ValueError("La cantidad debe ser positiva")
+            raise ValueError("La nota debe ser positiva")
         if cantidad > self.__saldo:
-            raise ValueError(f"Saldo insuficiente (disponible: {self.__saldo}€)")
+            raise ValueError(f"Nota insuficiente (disponible: {self.__saldo})")
         self.__saldo -= cantidad
-        self.__registrar(f"Retiro: -{cantidad}€")
+        self.__registrar(f"Nota reducida: -{cantidad}")
         return self
 
     def transferir(self, destino, cantidad):
         self.retirar(cantidad)
         destino.depositar(cantidad)
-        self.__registrar(f"Transferencia a {destino.titular}: -{cantidad}€")
+        self.__registrar(f"Transferencia de nota a {destino.titular}: -{cantidad}")
         return self
 
-    # Método privado — solo para uso interno
     def __registrar(self, operacion):
         from datetime import datetime
         hora = datetime.now().strftime("%H:%M:%S")
         self.__historial.append(f"[{hora}] {operacion}")
 
     def __str__(self):
-        return f"Cuenta({self.titular}: {self.__saldo}€)"
+        return f"RegistroNotas({self.titular}: {self.__saldo})"
 
-# Uso
-c1 = CuentaBancaria("Ana García", 1000)
-c2 = CuentaBancaria("Luis Pérez", 500)
+registro1 = RegistroNotas("Ana García", 1000)
+registro2 = RegistroNotas("Luis Pérez", 500)
 
-c1.depositar(500).retirar(200)     # encadenamiento — depositar y retirar devuelven self
-c1.transferir(c2, 300)
+registro1.depositar(500).retirar(200)
+registro1.transferir(registro2, 300)
 
-print(c1)    # Cuenta(Ana García: 1000€)
-print(c2)    # Cuenta(Luis Pérez: 800€)
-print(f"Saldo Ana: {c1.saldo}€")   # acceso como atributo (property)
+print(registro1)
+print(registro2)
+print(f"Nota de Ana: {registro1.saldo}")
 
-# c1.__saldo = 99999  # AttributeError — acceso directo denegado
-# c1.saldo = 99999    # AttributeError — no hay setter
-
-for entrada in c1.historial:
+for entrada in registro1.historial:
     print(f"  {entrada}")

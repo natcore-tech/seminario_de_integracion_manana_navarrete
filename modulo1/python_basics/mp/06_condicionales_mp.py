@@ -1,26 +1,26 @@
-print("Condicionales simples")
-edad=input("Incluye edad del estudiante: ")
-if (int(edad)>=18):
-    print("Mayor de edad")
+print("Registro de notas")
+nota=input("Incluye la nota final del estudiante: ")
+if (int(nota)>=60):
+    print("Nota aprobatoria")
 
-print("Condicionales dos caminos")
-temperatura=input("Incluye temperatura del estudiante: ")
-if (int(temperatura)>=38):
-    print("Temperatura alta")
+print("Validacion de asistencia")
+asistencia=input("Incluye el porcentaje de asistencia: ")
+if (int(asistencia)>=80):
+    print("Asistencia suficiente")
 else:
-    print("Temperatura normal")
+    print("Asistencia insuficiente")
 
-print("Condicionales if anidados")
-tiene_reserva=True
-dinero=25
-plato="pizza"
-if (tiene_reserva):
-    if (dinero>=20):
-        if plato=="pizza":
-            print("Tu pizza cuesta $20. Pedido confirmado")
+print("Registro de notas con validaciones anidadas")
+tiene_matricula=True
+nota_final=85
+materia="matematicas"
+if (tiene_matricula):
+    if (nota_final>=70):
+        if materia=="matematicas":
+            print("La nota fue registrada correctamente")
         else:
-            print("Plato disponible")
+            print("Materia registrada")
     else:
-        print("Dinero insuficiente")
+        print("Nota insuficiente para registrar")
 else:
-    print("No tiene reserva")
+    print("No tiene matricula")

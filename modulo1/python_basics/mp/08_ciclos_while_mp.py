@@ -1,51 +1,55 @@
-contador = 1
-while (contador <= 5):
-    print(f"Contador: {contador}")
-    contador += 1
+registros = []
+print("Sistema de registro de notas")
 
-
-print("control del ciclo")
-print("continue")
-i = 1
-while (i <= 5):
-    i+=1
-    if i == 2:
+cantidad = 1
+while cantidad <= 5:
+    nombre = input(f"Alumno {cantidad} - Nombre (dejar vacio para omitir): ")
+    if nombre == "":
+        cantidad += 1
         continue
-    print(f"Contador: {i}")
-print("break")
-i = 1
-while (i <= 5):
-    if i == 3:
-        break
-    print(f"Contador: {i}")
-    i+=1
+    try:
+        nota = float(input(f"{nombre} - Nota (0-100): "))
+    except ValueError:
+        print("Nota inválida, se omite alumno")
+        cantidad += 1
+        continue
+    registros.append((nombre, nota))
+    cantidad += 1
 
-numero = int(input("Ingrese numero: "))
-while numero!= 0:
-    print("Ingresaste:", numero)
-    numero = int(input("Ingrese numero: "))
+print("Resumen de registros:")
+for alumno, nota in registros:
+    print(f"Alumno: {alumno} - Nota: {nota}")
 
-contador = 1
-while (contador <= 5):
-    print(f"Contador: {contador}")
-    contador += 1
+print("Registro por entrada hasta 0")
+valor = None
+valor = input("Ingrese nota (0 para finalizar): ")
+while valor != "0":
+    try:
+        v = float(valor)
+        print(f"Nota registrada: {v}")
+    except ValueError:
+        print("Entrada no válida")
+    valor = input("Ingrese nota (0 para finalizar): ")
+
+cont = 1
+while cont <= 5:
+    print(f"Procesando registro {cont}")
+    cont += 1
 else:
-    print("Fin del ciclo")
+    print("Procesamiento completado")
 
-
-contador = 1
+cont = 1
 while True:
-    print(f"Contador: {contador}")
-    contador += 1
-    if not (contador <= 5):
+    if cont > 5:
         break
+    print(f"Verificando registro {cont}")
+    cont += 1
 
-
-contrasena = "123"
+clave = "profesor"
 while True:
-    entrada = input("Ingrese la contraseña: ")
-    if entrada == contrasena:
-        print("acceso permitido")
+    intento = input("Ingrese la clave del sistema: ")
+    if intento == clave:
+        print("Acceso concedido")
         break
     else:
-        print("Contraseña incorrecta")
+        print("Clave incorrecta")
