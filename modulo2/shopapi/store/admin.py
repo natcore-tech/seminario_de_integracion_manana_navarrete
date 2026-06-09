@@ -1,6 +1,8 @@
 # store/admin.py
 from django.contrib import admin
-from store.models import Category, Product, Order, OrderItem
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
+from store.models import Category, Product, Order, OrderItem, UserProfile
 
 
 @admin.register(Category)
@@ -32,3 +34,18 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields   = ['user__username']
     inlines         = [OrderItemInline]
     readonly_fields = ['total', 'created_at', 'updated_at']
+
+
+class UserProfileInline(admin.StackedInline):
+    model               = UserProfile
+    can_delete          = False
+    verbose_name_plural = 'Profile'
+    fields              = ['avatar']
+
+
+class UserAdmin(BaseUserAdmin):
+    inlines = [UserProfileInline]
+
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
