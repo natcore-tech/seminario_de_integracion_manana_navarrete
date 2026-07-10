@@ -1,36 +1,138 @@
 // src/presentation/router/AppRouter.tsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Suspense, lazy, useEffect } from 'react'
+import { useAuthStore } from '@/presentation/store/auth.store'
+import ProtectedRoute from './ProtectedRoute'
 import PlaceholderPage from '../pages/PlaceholderPage'
+import AppShell from '../components/AppShell'
+
+// ─── Lazy imports ─────────────────────────────────────────────────────────────
+
+// Auth (sin shell) — reales desde este módulo
+const LoginPage = lazy(() => import('../pages/auth/LoginPage'))
+const RegisterPage = lazy(() => import('../pages/auth/RegisterPage'))
+
+// El resto de páginas todavía no existen: se implementan en módulos posteriores
+// (Catálogo → 4/5, Carrito → 6, Órdenes → 7, Perfil → 8, Admin → 9-13) y cada uno
+// reemplaza aquí su propio <Route> por un lazy import real.
+
+// ─── Loader global ────────────────────────────────────────────────────────────
+
+function PageLoader() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+    </div>
+  )
+}
+
+// ─── Router ───────────────────────────────────────────────────────────────────
 
 export default function AppRouter() {
+  const loadSession = useAuthStore((state) => state.loadSession)
+
+  // Cargar la sesión guardada al iniciar la app.
+  // loadSession() restaura los tokens y valida el token con /auth/me/
+  useEffect(() => {
+    loadSession()
+  }, [loadSession])
+
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Auth — Módulo 3 */}
-        <Route path="/login" element={<PlaceholderPage title="Login — Módulo 3" />} />
-        <Route path="/register" element={<PlaceholderPage title="Register — Módulo 3" />} />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* ── Rutas de autenticación (sin AppShell) ── */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
-        {/* Catálogo (público) — Módulo 4 / 5 */}
-        <Route path="/" element={<PlaceholderPage title="Catálogo — Módulo 4" />} />
-        <Route path="/catalog" element={<PlaceholderPage title="Catálogo — Módulo 4" />} />
-        <Route path="/products/:id" element={<PlaceholderPage title="Detalle de producto — Módulo 5" />} />
+          {/* ── Rutas con AppShell ── */}
+          <Route element={<AppShell />}>
+            {/* Públicas — placeholder hasta el módulo 4/5 */}
+            <Route path="/" element={<PlaceholderPage title="Catálogo — Módulo 4" />} />
+            <Route path="/catalog" element={<PlaceholderPage title="Catálogo — Módulo 4" />} />
+            <Route path="/products/:id" element={<PlaceholderPage title="Detalle de producto — Módulo 5" />} />
 
-        {/* Requieren autenticación — Módulos 6, 7, 8 */}
-        <Route path="/cart" element={<PlaceholderPage title="Carrito — Módulo 6" />} />
-        <Route path="/orders" element={<PlaceholderPage title="Órdenes — Módulo 7" />} />
-        <Route path="/orders/:id" element={<PlaceholderPage title="Detalle de orden — Módulo 7" />} />
-        <Route path="/profile" element={<PlaceholderPage title="Perfil — Módulo 8" />} />
+            {/* Requieren autenticación — placeholder hasta los módulos 6, 7 y 8 */}
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <PlaceholderPage title="Carrito — Módulo 6" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <PlaceholderPage title="Órdenes — Módulo 7" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders/:id"
+              element={
+                <ProtectedRoute>
+                  <PlaceholderPage title="Detalle de orden — Módulo 7" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <PlaceholderPage title="Perfil — Módulo 8" />
+                </ProtectedRoute>
+              }
+            />
 
-        {/* Admin — Módulos 9 a 13 */}
-        <Route path="/admin" element={<PlaceholderPage title="Admin Dashboard — Módulo 9" />} />
-        <Route path="/admin/categories" element={<PlaceholderPage title="Admin Categorías — Módulo 10" />} />
-        <Route path="/admin/products" element={<PlaceholderPage title="Admin Productos — Módulo 11" />} />
-        <Route path="/admin/orders" element={<PlaceholderPage title="Admin Órdenes — Módulo 12" />} />
-        <Route path="/admin/users" element={<PlaceholderPage title="Admin Usuarios — Módulo 13" />} />
+            {/* Requieren autenticación + rol staff — placeholder hasta los módulos 9 a 13 */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requireStaff>
+                  <PlaceholderPage title="Admin Dashboard — Módulo 9" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/categories"
+              element={
+                <ProtectedRoute requireStaff>
+                  <PlaceholderPage title="Admin Categorías — Módulo 10" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/products"
+              element={
+                <ProtectedRoute requireStaff>
+                  <PlaceholderPage title="Admin Productos — Módulo 11" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/orders"
+              element={
+                <ProtectedRoute requireStaff>
+                  <PlaceholderPage title="Admin Órdenes — Módulo 12" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute requireStaff>
+                  <PlaceholderPage title="Admin Usuarios — Módulo 13" />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }
