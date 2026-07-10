@@ -10,10 +10,8 @@ import type { CategoryStats } from '@/domain/entities/category-stats.entity'
 export class AxiosCategoryRepository implements CategoryRepository {
   async getCategories(): Promise<Category[]> {
     try {
-      // El backend pagina /categories/ (PAGE_SIZE=10 en config/settings.py).
-      // Se pide una página grande para obtener todas las categorías de una sola
-      // vez, ya que este port devuelve un listado plano (usado por el filtro
-      // público del catálogo).
+      // page_size alto: el admin y el filtro de la tienda esperan la lista completa,
+      // no una página — ver la corrección en 10.1.
       const { data } = await apiClient.get<PaginatedResult<Category>>('/categories/', {
         params: { page_size: 100 },
       })
@@ -22,6 +20,41 @@ export class AxiosCategoryRepository implements CategoryRepository {
       throw parseApiError(err)
     }
   }
+
+  async createCategory(payload: {
+    name: string
+    slug: string
+    description?: string
+    is_active?: boolean
+  }): Promise<Category> {
+    try {
+      const { data } = await apiClient.post<Category>('/categories/', payload)
+      return data
+    } catch (err) {
+      throw parseApiError(err)
+    }
+  }
+
+  async updateCategory(
+    id: number,
+    payload: { name?: string; description?: string; is_active?: boolean },
+  ): Promise<Category> {
+    try {
+      const { data } = await apiClient.patch<Category>(`/categories/${id}/`, payload)
+      return data
+    } catch (err) {
+      throw parseApiError(err)
+    }
+  }
+
+  async deleteCategory(id: number): Promise<void> {
+    try {
+      await apiClient.delete(`/categories/${id}/`)
+    } catch (err) {
+      throw parseApiError(err)
+    }
+  }
+  
   async getStats(): Promise<CategoryStats> {
     try {
         const { data } = await apiClient.get<CategoryStats>('/categories/stats/')
