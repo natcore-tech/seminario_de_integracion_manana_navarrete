@@ -14,6 +14,7 @@ import {
 } from '@/presentation/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/presentation/components/ui/avatar'
 import { Separator } from '@/presentation/components/ui/separator'
+import { useCartStore } from '@/presentation/store/cart.store'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -37,7 +38,7 @@ export default function AppShell() {
   const { user, logout } = useAuthStore()
 
   // En módulos siguientes esto vendrá del CartStore
-  const cartItemCount = 0
+  const cartItemCount = useCartStore((s) => s.itemCount())
 
   async function handleLogout() {
     await logout()

@@ -7,7 +7,7 @@ interface CategoryFilterProps {
   layout?: 'horizontal' | 'vertical'
 }
 
-export function CategoryFilter({ layout = 'horizontal' }: CategoryFilterProps) {
+export function CategoryFilter({ layout = 'vertical' }: CategoryFilterProps) {
   const categories = useCatalogStore((s) => s.categories)
   const filters = useCatalogStore((s) => s.filters)
   const setFilters = useCatalogStore((s) => s.setFilters)
