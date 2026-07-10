@@ -15,6 +15,7 @@ const RegisterPage = lazy(() => import('../pages/auth/RegisterPage'))
 const CatalogPage = lazy(() => import('../pages/catalog/CatalogPage'))
 const ProductDetailPage = lazy(() => import('../pages/catalog/ProductDetailPage'))
 const CartPage = lazy(() => import('../pages/cart/CartPage'))
+const CheckoutPage = lazy(() => import('../pages/orders/CheckoutPage'))
 
 
 // El resto de páginas todavía no existen: se implementan en módulos posteriores
@@ -131,6 +132,14 @@ export default function AppRouter() {
                   <PlaceholderPage title="Admin Usuarios — Módulo 13" />
                 </ProtectedRoute>
               }
+            />
+            <Route
+             path="/orders/new"
+             element={
+                <ProtectedRoute>
+                 <CheckoutPage />
+                </ProtectedRoute>
+             }
             />
           </Route>
 
