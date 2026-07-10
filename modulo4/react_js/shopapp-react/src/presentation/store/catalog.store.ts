@@ -14,6 +14,7 @@ interface CatalogState {
   error: string | null
   totalCount: number
   currentPage: number
+  activeFilterCount: number
 }
 
 interface CatalogActions {
@@ -30,6 +31,14 @@ const DEFAULT_FILTERS: ProductFilters = {
   ordering: 'name',
 }
 
+function countActiveFilters(filters: ProductFilters): number {
+  let count = 0
+  if (filters.search.trim() !== '') count++
+  if (filters.categoryId !== null) count++
+  if (filters.ordering !== DEFAULT_FILTERS.ordering) count++
+  return count
+}
+
 export const useCatalogStore = create<CatalogState & CatalogActions>((set, get) => ({
   products: [],
   categories: [],
@@ -38,6 +47,7 @@ export const useCatalogStore = create<CatalogState & CatalogActions>((set, get) 
   error: null,
   totalCount: 0,
   currentPage: 1,
+  activeFilterCount: 0,
 
   async fetchProducts() {
     set({ isLoading: true, error: null })
@@ -65,14 +75,22 @@ export const useCatalogStore = create<CatalogState & CatalogActions>((set, get) 
   },
 
   setFilters(partial) {
-    set((state) => ({
-      filters: { ...state.filters, ...partial },
-      currentPage: 1,
-    }))
+    set((state) => {
+      const newFilters = { ...state.filters, ...partial }
+      return {
+        filters: newFilters,
+        currentPage: 1,
+        activeFilterCount: countActiveFilters(newFilters),
+      }
+    })
   },
 
   resetFilters() {
-    set({ filters: { ...DEFAULT_FILTERS }, currentPage: 1 })
+    set({
+      filters: { ...DEFAULT_FILTERS },
+      currentPage: 1,
+      activeFilterCount: 0,
+    })
   },
 
   setPage(page) {
