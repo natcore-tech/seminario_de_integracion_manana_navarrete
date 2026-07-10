@@ -5,7 +5,11 @@ import type { PaginatedResult } from '@/domain/entities/paginated-result.entity'
 import type { AddItemDto } from '@/application/dtos/add-item.dto'
 
 export class OrderUseCase {
-  constructor(private readonly orderRepository: OrderRepository) {}
+  private readonly orderRepository: OrderRepository
+    
+      constructor(orderRepository: OrderRepository) {
+        this.orderRepository = orderRepository
+      }
 
   getOrders(page = 1): Promise<PaginatedResult<Order>> {
     return this.orderRepository.getOrders(page)
