@@ -6,6 +6,8 @@ import ProtectedRoute from './ProtectedRoute'
 import PlaceholderPage from '../pages/PlaceholderPage'
 import AppShell from '../components/AppShell'
 import AdminProductsPage from '../pages/admin/AdminProductsPage'
+import AdminOrdersPage from '../pages/admin/AdminOrdersPage'
+import AdminOrderDetailPage from '../pages/admin/AdminOrderDetailPage'
 
 
 
@@ -138,7 +140,15 @@ export default function AppRouter() {
                             path="/admin/orders"
                             element={
                                 <ProtectedRoute requireStaff>
-                                    <PlaceholderPage title="Admin Órdenes — Módulo 12" />
+                                    <AdminOrdersPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/admin/orders/:id"
+                            element={
+                                <ProtectedRoute requireStaff>
+                                    <AdminOrderDetailPage />
                                 </ProtectedRoute>
                             }
                         />
