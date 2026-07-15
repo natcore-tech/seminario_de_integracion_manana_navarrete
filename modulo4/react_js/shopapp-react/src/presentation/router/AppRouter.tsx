@@ -5,6 +5,7 @@ import { useAuthStore } from '@/presentation/store/auth.store'
 import ProtectedRoute from './ProtectedRoute'
 import PlaceholderPage from '../pages/PlaceholderPage'
 import AppShell from '../components/AppShell'
+import AdminProductsPage from '../pages/admin/AdminProductsPage'
 
 
 
@@ -129,7 +130,7 @@ export default function AppRouter() {
                             path="/admin/products"
                             element={
                                 <ProtectedRoute requireStaff>
-                                    <PlaceholderPage title="Admin Productos — Módulo 11" />
+                                    <AdminProductsPage />
                                 </ProtectedRoute>
                             }
                         />
