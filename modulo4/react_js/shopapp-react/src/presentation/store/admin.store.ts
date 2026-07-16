@@ -66,6 +66,8 @@ interface AdminActions {
   fetchAdminUsers(page?: number, search?: string): Promise<void>
   updateUserStaffStatus(id: number, isStaff: boolean): Promise<void>
   toggleUserActive(id: number): Promise<void>
+
+  uploadProductImage(id: number, file: File): Promise<void>
 }
 
 export const useAdminStore = create<AdminState & AdminActions>((set, get) => ({
@@ -260,6 +262,17 @@ export const useAdminStore = create<AdminState & AdminActions>((set, get) => ({
       })
     } catch (err) {
       throw err instanceof ApiException ? err : new Error('No se pudo cambiar el estado del usuario.')
+    }
+  },
+
+
+  // ── Agregar a la implementación del store ──
+  async uploadProductImage(id, file) {
+    try {
+      const updated = await productUseCase.uploadImage(id, file)
+      set({ products: get().products.map((p) => (p.id === id ? updated : p)) })
+    } catch (err) {
+      throw err instanceof ApiException ? err : new Error('No se pudo subir la imagen.')
     }
   },
 }))

@@ -56,43 +56,59 @@ export class AxiosProductRepository implements ProductRepository {
   }
 
   async createProduct(payload: CreateProductPayload): Promise<Product> {
-  try {
-    const { data } = await apiClient.post<Product>('/products/', payload)
-    return data
-  } catch (err) {
-    throw parseApiError(err)
+    try {
+      const { data } = await apiClient.post<Product>('/products/', payload)
+      return data
+    } catch (err) {
+      throw parseApiError(err)
+    }
   }
-}
 
-async updateProduct(id: number, payload: Partial<CreateProductPayload>): Promise<Product> {
-  try {
-    const { data } = await apiClient.patch<Product>(`/products/${id}/`, payload)
-    return data
-  } catch (err) {
-    throw parseApiError(err)
+  async updateProduct(id: number, payload: Partial<CreateProductPayload>): Promise<Product> {
+    try {
+      const { data } = await apiClient.patch<Product>(`/products/${id}/`, payload)
+      return data
+    } catch (err) {
+      throw parseApiError(err)
+    }
   }
-}
 
-async deleteProduct(id: number): Promise<void> {
-  try {
-    await apiClient.delete(`/products/${id}/`)
-  } catch (err) {
-    throw parseApiError(err)
+  async deleteProduct(id: number): Promise<void> {
+    try {
+      await apiClient.delete(`/products/${id}/`)
+    } catch (err) {
+      throw parseApiError(err)
+    }
   }
-}
 
-async restockProduct(
-  id: number,
-  quantity: number,
-): Promise<{ id: number; name: string; new_stock: number }> {
-  try {
-    const { data } = await apiClient.post<{ id: number; name: string; new_stock: number }>(
-      `/products/${id}/restock/`,
-      { quantity },
-    )
-    return data
-  } catch (err) {
-    throw parseApiError(err)
+  async restockProduct(
+    id: number,
+    quantity: number,
+  ): Promise<{ id: number; name: string; new_stock: number }> {
+    try {
+      const { data } = await apiClient.post<{ id: number; name: string; new_stock: number }>(
+        `/products/${id}/restock/`,
+        { quantity },
+      )
+      return data
+    } catch (err) {
+      throw parseApiError(err)
+    }
   }
-}
+
+  async uploadImage(id: number, file: File): Promise<Product> {
+    const formData = new FormData()
+    formData.append('image', file)
+
+    try {
+      const { data } = await apiClient.patch<Product>(`/products/${id}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      return data
+    } catch (err) {
+      throw parseApiError(err)
+    }
+  }
 }

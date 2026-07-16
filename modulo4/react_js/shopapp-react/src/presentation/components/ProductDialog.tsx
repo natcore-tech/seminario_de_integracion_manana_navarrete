@@ -12,6 +12,8 @@ import { ApiException } from '@/domain/exceptions/api.exception'
 import type { Category } from '@/domain/entities/category.entity'
 import type { Product } from '@/domain/entities/product.entity'
 import { ProductForm, type ProductFormValues } from './ProductForm'
+import { ImageUploader } from './ImageUploader'
+import { Separator } from './ui/separator'
 
 interface ProductDialogProps {
   open: boolean
@@ -28,6 +30,13 @@ export function ProductDialog({ open, onOpenChange, product, categories }: Produ
   const isEditing = Boolean(product)
   const title = isEditing ? 'Editar producto' : 'Nuevo producto'
   const activeCategories = categories.filter((c) => c.is_active)
+
+  const uploadProductImage = useAdminStore((s) => s.uploadProductImage)
+
+  async function handleImageUpload(file: File) {
+    if (!product) return // no debería ocurrir: el bloque solo se renderiza en modo edición
+    await uploadProductImage(product.id, file)
+  }
 
   async function handleSubmit(data: ProductFormValues) {
     setIsLoading(true)
@@ -74,6 +83,20 @@ export function ProductDialog({ open, onOpenChange, product, categories }: Produ
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
+
+        {isEditing && product && (
+          <>
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium">Imagen del producto</h3>
+              <p className="text-xs text-muted-foreground">
+                La imagen se sube al instante; no es necesario guardar el formulario.
+              </p>
+              <ImageUploader currentImageUrl={product.image} onUpload={handleImageUpload} />
+            </div>
+            <Separator />
+          </>
+        )}
+
         <ProductForm
           key={product?.id ?? 'new'}
           defaultValues={defaultValues}

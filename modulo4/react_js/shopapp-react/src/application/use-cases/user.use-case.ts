@@ -36,4 +36,8 @@ export class UserUseCase {
   toggleUserActive(id: number): Promise<{ is_active: boolean }> {
     return this.userRepository.toggleUserActive(id)
   }
+
+  uploadAvatar(file: File): Promise<UserProfile> {
+    return this.userRepository.uploadAvatar(file)
+  }
 }
